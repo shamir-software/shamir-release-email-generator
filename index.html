@@ -687,12 +687,13 @@
     }
 
     // Build Type Badge HTML
+    // Build Type Badge HTML
     function buildTypeBadge(meta, isSolid) {
       if (isSolid) {
         return `
           <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
             <tr>
-              <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: bold; color: ${meta.solidText}; font-family: Arial, sans-serif; white-space: nowrap;">
+              <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${meta.solidText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
                 ${meta.label}
               </td>
             </tr>
@@ -702,8 +703,13 @@
         return `
           <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
             <tr>
-              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; border: 1px solid ${meta.border}; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: bold; color: ${meta.softText}; font-family: Arial, sans-serif; white-space: nowrap;">
-                <span style="color: ${meta.dotColor}; font-size: 11px; margin-right: 2px;">●</span> ${meta.label}
+              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; border: 1px solid ${meta.border}; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; color: ${meta.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
+                <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-right: 3px;">
+                  <tr>
+                    <td width="6" height="6" bgcolor="${meta.dotColor}" style="background-color: ${meta.dotColor}; width: 6px; height: 6px; border-radius: 50%; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                  </tr>
+                </table>
+                ${meta.label}
               </td>
             </tr>
           </table>
@@ -725,35 +731,35 @@
         stateColor = '#475569';
       }
 
-      let idFormatted = `<span style="font-family: monospace, Arial; font-weight: bold; color: #0f172a;">#${item.id}</span>`;
+      let idFormatted = `<span style="font-family: monospace, Arial; font-weight: 600; color: #0f172a;">#${item.id}</span>`;
       if (item.url) {
-        idFormatted = `<a href="${item.url}" target="_blank" style="color: #0078d4; text-decoration: underline; font-family: monospace, Arial; font-weight: bold;"><span style="color: #0078d4;">#${item.id}</span></a>`;
+        idFormatted = `<a href="${item.url}" target="_blank" style="color: #0078d4; text-decoration: underline; font-family: monospace, Arial; font-weight: 600;"><font color="#0078d4"><span style="color: #0078d4;">#${item.id}</span></font></a>`;
       }
 
       let tagHtml = '';
       if (item.tag) {
-        tagHtml = `<div style="font-size: 11px; color: #7c3aed; font-weight: bold; margin-top: 3px;">🏷️ ${item.tag}</div>`;
+        tagHtml = `<div style="font-size: 11px; color: #7c3aed; font-weight: 600; margin-top: 3px; font-family: 'Segoe UI', Arial, sans-serif;">🏷️ ${item.tag}</div>`;
       }
 
       return `
         <tr bgcolor="${rowBg}" style="background-color: ${rowBg}; border-bottom: 1px solid #e2e8f0;">
-          <td style="padding: 10px 12px; font-size: 12px; width: 75px;">
+          <td style="padding: 9px 12px; font-size: 12px; width: 75px; font-family: 'Segoe UI', Arial, sans-serif;">
             ${idFormatted}
           </td>
-          <td style="padding: 10px 12px; width: 105px;">
+          <td style="padding: 9px 12px; width: 105px;">
             ${buildTypeBadge(meta, isSolid)}
           </td>
-          <td style="padding: 10px 12px; font-size: 13px; color: #0f172a; font-weight: 500; line-height: 1.4; font-family: Arial, sans-serif;">
+          <td style="padding: 9px 12px; font-size: 13px; color: #0f172a; font-weight: 400; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">
             ${item.title}
             ${tagHtml}
           </td>
-          <td style="padding: 10px 12px; font-size: 12px; color: #475569; white-space: nowrap; font-family: Arial, sans-serif; width: 105px;">
+          <td style="padding: 9px 12px; font-size: 12px; color: #475569; white-space: nowrap; font-family: 'Segoe UI', Arial, sans-serif; width: 105px;">
             ${item.assignee || ''}
           </td>
-          <td align="center" style="padding: 10px 12px; width: 85px;">
-            <table border="0" cellspacing="0" cellpadding="0">
+          <td align="center" style="padding: 9px 12px; width: 85px;">
+            <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
               <tr>
-                <td bgcolor="${stateBg}" style="background-color: ${stateBg}; border: 1px solid ${stateBorder}; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; color: ${stateColor}; font-family: Arial, sans-serif;">
+                <td bgcolor="${stateBg}" style="background-color: ${stateBg}; border: 1px solid ${stateBorder}; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${stateColor}; font-family: 'Segoe UI', Arial, sans-serif; line-height: 15px;">
                   ${item.state}
                 </td>
               </tr>
@@ -771,14 +777,14 @@
       }).join('');
 
       return `
-        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #cbd5e1; border-collapse: collapse; margin-bottom: 16px;">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #cbd5e1; border-collapse: collapse; margin-bottom: 16px; font-family: 'Segoe UI', Arial, sans-serif;">
           <thead>
-            <tr bgcolor="#f1f5f9" style="background-color: #f1f5f9;">
-              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 75px;">ID</th>
-              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 105px;">Type</th>
-              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1;">Title</th>
-              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 105px;">Assigned</th>
-              <th align="center" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 85px;">State</th>
+            <tr bgcolor="#f8fafc" style="background-color: #f8fafc;">
+              <th align="left" style="padding: 8px 12px; font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1; width: 75px; font-family: 'Segoe UI', Arial, sans-serif;">ID</th>
+              <th align="left" style="padding: 8px 12px; font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1; width: 105px; font-family: 'Segoe UI', Arial, sans-serif;">Type</th>
+              <th align="left" style="padding: 8px 12px; font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1; font-family: 'Segoe UI', Arial, sans-serif;">Title</th>
+              <th align="left" style="padding: 8px 12px; font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1; width: 105px; font-family: 'Segoe UI', Arial, sans-serif;">Assigned</th>
+              <th align="center" style="padding: 8px 12px; font-size: 11px; font-weight: 600; color: #475569; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 2px solid #cbd5e1; width: 85px; font-family: 'Segoe UI', Arial, sans-serif;">State</th>
             </tr>
           </thead>
           <tbody>
@@ -831,10 +837,15 @@
             const count = entry.count;
             return `
               <td style="padding-right: 8px; padding-bottom: 6px;">
-                <table border="0" cellspacing="0" cellpadding="0" bgcolor="${m.softBg}" style="background-color: ${m.softBg}; border: 1px solid ${m.border}; border-radius: 14px; font-family: Arial, sans-serif;">
+                <table border="0" cellspacing="0" cellpadding="0" bgcolor="${m.softBg}" style="background-color: ${m.softBg}; border: 1px solid ${m.border}; border-radius: 12px; font-family: 'Segoe UI', Arial, sans-serif;">
                   <tr>
-                    <td style="padding: 4px 11px; font-size: 11px; font-weight: bold; color: ${m.softText}; white-space: nowrap;">
-                      <span style="color: ${m.dotColor}; font-size: 12px;">●</span> ${count} ${count === 1 ? m.label : m.plural}
+                    <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; padding: 3px 10px; font-size: 11px; font-weight: 600; color: ${m.softText}; white-space: nowrap; border-radius: 12px;">
+                      <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-right: 4px;">
+                        <tr>
+                          <td width="7" height="7" bgcolor="${m.dotColor}" style="background-color: ${m.dotColor}; width: 7px; height: 7px; border-radius: 50%; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                        </tr>
+                      </table>
+                      ${count} ${count === 1 ? m.label : m.plural}
                     </td>
                   </tr>
                 </table>
@@ -869,7 +880,7 @@
               data: chartData,
               backgroundColor: chartColors,
               borderWidth: 2,
-              borderColor: '#ffffff'
+              borderColor: '#f8fafc'
             }]
           },
           options: {
@@ -877,11 +888,11 @@
               legend: false,
               datalabels: { display: false }
             },
-            cutoutPercentage: 52
+            cutoutPercentage: 60
           }
         };
 
-        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=80&h=80&bkg=transparent`;
+        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=160&h=160&devicePixelRatio=2&bkg=f8fafc`;
 
         let legendCellHtml = '';
         if (showChartLegend) {
@@ -891,21 +902,25 @@
             const pct = Math.round((count / totalCount) * 100);
             return `
               <tr>
-                <td style="padding: 1px 0; white-space: nowrap;">
-                  <span style="color: ${m.solidBg}; font-size: 11px; vertical-align: middle;">●</span>
-                  <span style="color: #334155; font-weight: bold; font-size: 11px; margin-left: 3px; vertical-align: middle;">${m.label}</span>
+                <td bgcolor="#f8fafc" style="background-color: #f8fafc; padding: 2px 0; white-space: nowrap;">
+                  <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-right: 5px;">
+                    <tr>
+                      <td width="8" height="8" bgcolor="${m.solidBg}" style="background-color: ${m.solidBg}; width: 8px; height: 8px; border-radius: 2px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                    </tr>
+                  </table>
+                  <span style="color: #334155; font-weight: 600; font-size: 11px; font-family: 'Segoe UI', Arial, sans-serif; vertical-align: middle;">${m.label}</span>
                 </td>
-                <td align="right" style="padding: 1px 0 1px 8px; white-space: nowrap;">
-                  <span style="color: #0f172a; font-weight: bold; font-size: 11px;">${count}</span>
-                  <span style="color: #94a3b8; font-size: 10px; margin-left: 2px;">(${pct}%)</span>
+                <td bgcolor="#f8fafc" align="right" style="background-color: #f8fafc; padding: 2px 0 2px 10px; white-space: nowrap;">
+                  <span style="color: #0f172a; font-weight: 600; font-size: 11px; font-family: 'Segoe UI', Arial, sans-serif;">${count}</span>
+                  <span style="color: #64748b; font-size: 10px; font-weight: normal; font-family: 'Segoe UI', Arial, sans-serif; margin-left: 2px;">(${pct}%)</span>
                 </td>
               </tr>
             `;
           }).join('');
 
           legendCellHtml = `
-            <td valign="middle" align="left" style="border-left: 1px solid #e2e8f0; padding-left: 10px;">
-              <table border="0" cellspacing="0" cellpadding="0" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.35;">
+            <td bgcolor="#f8fafc" valign="middle" align="left" style="background-color: #f8fafc; border-left: 1px solid #e2e8f0; padding: 8px 12px 8px 10px;">
+              <table border="0" cellspacing="0" cellpadding="0" style="font-family: 'Segoe UI', Arial, sans-serif; font-size: 11px; line-height: 1.35;">
                 ${legendRows}
               </table>
             </td>
@@ -913,11 +928,11 @@
         }
 
         pieChartCellHtml = `
-          <td align="right" valign="middle" style="padding-left: 14px;">
-            <table border="0" cellspacing="0" cellpadding="0" bgcolor="#f8fafc" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px;">
+          <td align="right" valign="middle" style="padding-left: 16px;">
+            <table border="0" cellspacing="0" cellpadding="0" bgcolor="#f8fafc" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
               <tr>
-                <td valign="middle" align="center" style="${showChartLegend ? 'padding-right: 10px;' : ''}">
-                  <img src="${chartUrl}" width="72" height="72" alt="Distribution Chart" title="Work Items Distribution" style="display: block; width: 72px; height: 72px; border: 0;" onerror="this.style.display='none'" />
+                <td bgcolor="#f8fafc" valign="middle" align="center" style="background-color: #f8fafc; padding: 8px 10px; ${showChartLegend ? 'padding-right: 8px;' : ''}">
+                  <img src="${chartUrl}" width="76" height="76" alt="Distribution Chart" title="Work Items Distribution" style="display: block; width: 76px; height: 76px; border: 0;" onerror="this.style.display='none'" />
                 </td>
                 ${legendCellHtml}
               </tr>
@@ -933,17 +948,23 @@
           const m = group.meta;
           const count = group.list.length;
           return `
-            <div style="margin-top: 24px; margin-bottom: 8px;">
+            <div style="margin-top: 22px; margin-bottom: 8px;">
               <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 8px;">
                 <tr>
-                  <td width="10" bgcolor="${m.dotColor}" style="background-color: ${m.dotColor}; border-radius: 3px; font-size: 1px; line-height: 1px;">&nbsp;</td>
-                  <td style="padding-left: 8px;">
-                    <span style="font-size: 15px; font-weight: bold; color: #0f172a; font-family: Arial, sans-serif;">
+                  <td width="4" bgcolor="${m.dotColor}" style="background-color: ${m.dotColor}; border-radius: 2px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                  <td style="padding-left: 8px; white-space: nowrap;">
+                    <span style="font-size: 14px; font-weight: 600; color: #0f172a; font-family: 'Segoe UI', Arial, sans-serif;">
                       ${count === 1 ? m.label : m.plural}
                     </span>
-                    <span style="display: inline-block; margin-left: 6px; font-size: 11px; font-weight: bold; color: ${m.softText}; background-color: ${m.softBg}; border: 1px solid ${m.border}; padding: 1px 7px; border-radius: 10px;">
-                      ${count}
-                    </span>
+                  </td>
+                  <td style="padding-left: 6px; white-space: nowrap;">
+                    <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
+                      <tr>
+                        <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; border: 1px solid ${m.border}; border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: ${m.softText}; font-family: 'Segoe UI', Arial, sans-serif; line-height: 14px;">
+                          ${count}
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -970,7 +991,7 @@
         <table id="emailRootTable" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f1f5f9" style="background-color: #f1f5f9; padding: 20px 0; direction: ltr;">
           <tr>
             <td align="center">
-              <table width="740" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="width: 740px; max-width: 740px; background-color: #ffffff; border: 1px solid #cbd5e1; border-collapse: separate; border-radius: 8px; font-family: Arial, sans-serif; text-align: left;">
+              <table width="740" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="width: 740px; max-width: 740px; background-color: #ffffff; border: 1px solid #cbd5e1; border-collapse: separate; border-radius: 8px; font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Arial, sans-serif; text-align: left;">
                 
                 <!-- Shamir Red Top Accent Line -->
                 <tr>
@@ -1009,20 +1030,20 @@
                     <table width="100%" border="0" cellspacing="0" cellpadding="0">
                       <tr>
                         <td width="26%" valign="top" style="border-right: 1px solid #e2e8f0; padding-right: 12px;">
-                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Component</div>
-                          <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-top: 2px;">${component}</div>
+                          <div style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Segoe UI', Arial, sans-serif;">Component</div>
+                          <div style="font-size: 13px; font-weight: 600; color: #0f172a; margin-top: 2px; font-family: 'Segoe UI', Arial, sans-serif;">${component}</div>
                         </td>
                         <td width="22%" valign="top" style="border-right: 1px solid #e2e8f0; padding-left: 12px; padding-right: 12px;">
-                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Version</div>
-                          <div style="font-size: 14px; font-weight: bold; color: #e11428; margin-top: 2px;">${version}</div>
+                          <div style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Segoe UI', Arial, sans-serif;">Version</div>
+                          <div style="font-size: 14px; font-weight: 600; color: #e11428; margin-top: 2px; font-family: 'Segoe UI', Arial, sans-serif;">${version}</div>
                         </td>
                         <td width="22%" valign="top" style="border-right: 1px solid #e2e8f0; padding-left: 12px; padding-right: 12px;">
-                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Items</div>
-                          <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-top: 2px;">${items.length} Completed</div>
+                          <div style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Segoe UI', Arial, sans-serif;">Total Items</div>
+                          <div style="font-size: 13px; font-weight: 600; color: #0f172a; margin-top: 2px; font-family: 'Segoe UI', Arial, sans-serif;">${items.length} Completed</div>
                         </td>
                         <td width="30%" valign="top" style="padding-left: 12px;">
-                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">QA Environment</div>
-                          <div style="font-size: 13px; font-weight: bold; margin-top: 2px;">
+                          <div style="font-size: 11px; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; font-family: 'Segoe UI', Arial, sans-serif;">QA Environment</div>
+                          <div style="font-size: 13px; font-weight: 600; margin-top: 2px; font-family: 'Segoe UI', Arial, sans-serif;">
                             <a href="${envUrl}" target="_blank" style="color: #e11428; text-decoration: none;">
                               ${envUrl.replace('https://', '').replace(/\/$/, '')} &rarr;
                             </a>
@@ -1040,10 +1061,14 @@
                       <tr>
                         <td valign="middle" align="left">
                           <div>
-                            <span style="font-size: 16px; font-weight: bold; color: #0f172a;">Included Work Items in v${version}</span>
-                            <span style="display: inline-block; margin-left: 8px; font-size: 12px; font-weight: bold; color: #475569; background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 10px;">
-                              ${items.length} Total
-                            </span>
+                            <span style="font-size: 15px; font-weight: 600; color: #0f172a; font-family: 'Segoe UI', Arial, sans-serif; vertical-align: middle;">Included Work Items in v${version}</span>
+                            <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-left: 8px;">
+                              <tr>
+                                <td bgcolor="#f1f5f9" style="background-color: #f1f5f9; border: 1px solid #cbd5e1; border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: #475569; font-family: 'Segoe UI', Arial, sans-serif; line-height: 14px;">
+                                  ${items.length} Total
+                                </td>
+                              </tr>
+                            </table>
                           </div>
                           ${summaryPillsHtml}
                         </td>
