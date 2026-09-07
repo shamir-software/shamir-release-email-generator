@@ -688,18 +688,31 @@
 
     // Build Type Badge HTML
     function buildTypeBadge(meta, isSolid) {
+      const badgeMap = {
+        requirement: { file: 'badge_requirement.png', w: 90, h: 22 },
+        feature: { file: 'badge_feature.png', w: 68, h: 22 },
+        bug: { file: 'badge_bug.png', w: 50, h: 22 },
+        issue: { file: 'badge_issue.png', w: 56, h: 22 },
+        task: { file: 'badge_task.png', w: 54, h: 22 }
+      };
+
+      const badgeInfo = badgeMap[meta.key];
+
+      if (isSolid && badgeInfo) {
+        const cdnUrl = `https://raw.githubusercontent.com/tzurbShamir/shamir-release-email-generator/main/badges/${badgeInfo.file}`;
+        return `<img src="${cdnUrl}" width="${badgeInfo.w}" height="${badgeInfo.h}" alt="${meta.label}" border="0" style="display: inline-block; vertical-align: middle; width: ${badgeInfo.w}px; height: ${badgeInfo.h}px; border: 0;" onerror="this.onerror=null; this.src='badges/${badgeInfo.file}';" />`;
+      }
+
       if (isSolid) {
         return `
           <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
             <tr>
               <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${meta.solidText} !important; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px; mso-color-alt: ${meta.solidText};">
-                <a style="color: ${meta.solidText} !important; text-decoration: none; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; cursor: default; pointer-events: none;">
-                  <font color="${meta.solidText}" style="color: ${meta.solidText} !important;">
-                    <span style="color: ${meta.solidText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
-                      ${meta.label}
-                    </span>
-                  </font>
-                </a>
+                <font color="${meta.solidText}">
+                  <span style="color: ${meta.solidText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                    ${meta.label}
+                  </span>
+                </font>
               </td>
             </tr>
           </table>
@@ -712,13 +725,11 @@
                 <font color="${meta.dotColor}">&#9679;</font>
               </td>
               <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 7px 2px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${meta.softText} !important; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px; mso-color-alt: ${meta.softText};">
-                <a style="color: ${meta.softText} !important; text-decoration: none; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; cursor: default; pointer-events: none;">
-                  <font color="${meta.softText}" style="color: ${meta.softText} !important;">
-                    <span style="color: ${meta.softText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
-                      ${meta.label}
-                    </span>
-                  </font>
-                </a>
+                <font color="${meta.softText}">
+                  <span style="color: ${meta.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                    ${meta.label}
+                  </span>
+                </font>
               </td>
             </tr>
           </table>
