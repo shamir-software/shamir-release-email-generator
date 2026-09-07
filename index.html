@@ -42,14 +42,32 @@
       box-shadow: 0 4px 20px rgba(0,0,0,0.25);
     }
     .form-group { margin-bottom: 16px; text-align: left; }
+    .form-label-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
     label {
-      display: block;
       font-size: 12px;
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.5px;
       color: #94a3b8;
-      margin-bottom: 6px;
+    }
+    .btn-clear-field {
+      background: transparent;
+      border: none;
+      color: #64748b;
+      font-size: 11px;
+      cursor: pointer;
+      padding: 2px 6px;
+      border-radius: 4px;
+      transition: all 0.2s;
+    }
+    .btn-clear-field:hover {
+      color: #f87171;
+      background: rgba(239, 68, 68, 0.1);
     }
     input[type="text"], select {
       width: 100%;
@@ -90,7 +108,7 @@
       accent-color: #e11428;
     }
 
-    /* Legend showing Azure colors */
+    /* Legend showing Azure colors in requested priority order */
     .color-legend {
       display: flex;
       flex-wrap: wrap;
@@ -107,11 +125,11 @@
       align-items: center;
       gap: 5px;
     }
-    .legend-bug { background: #CC293D; color: #fff; }
-    .legend-task { background: #F2CB1D; color: #323130; }
     .legend-req { background: #0078D4; color: #fff; }
     .legend-feature { background: #773B93; color: #fff; }
+    .legend-bug { background: #CC293D; color: #fff; }
     .legend-issue { background: #D83B01; color: #fff; }
+    .legend-task { background: #F2CB1D; color: #323130; }
 
     /* Rich WYSIWYG Paste Area */
     .wysiwyg-paste-area {
@@ -260,28 +278,47 @@
       <!-- Left Controls -->
       <div class="card">
         <div class="form-group">
-          <label>Component / Project Name</label>
-          <input type="text" id="componentName" value="personal.shamir.com" oninput="renderEmail()">
+          <div class="form-label-row">
+            <label>Component / Project Name</label>
+            <button type="button" class="btn-clear-field" onclick="clearField('componentName')">✖ נקה</button>
+          </div>
+          <input type="text" id="componentName" value="personal.shamir.com" 
+                 placeholder="הקלד שם פרויקט (למשל shamir.com)..."
+                 onfocus="handleFieldFocus(this)" 
+                 onclick="this.select()" 
+                 oninput="renderEmail()">
         </div>
 
         <div class="form-group">
-          <label>Release Version</label>
-          <input type="text" id="releaseVersion" value="2.2.0.4" oninput="renderEmail()">
+          <div class="form-label-row">
+            <label>Release Version</label>
+            <button type="button" class="btn-clear-field" onclick="clearField('releaseVersion')">✖ נקה</button>
+          </div>
+          <input type="text" id="releaseVersion" value="2.2.0.4" 
+                 placeholder="הקלד מספר גרסה (למשל 1.0.0.1)..."
+                 onfocus="handleFieldFocus(this)" 
+                 onclick="this.select()" 
+                 oninput="renderEmail()">
         </div>
 
         <div class="form-group">
-          <label>Target Environment URL</label>
-          <input type="text" id="envUrl" value="https://qapersonal.shamir.com/" oninput="renderEmail()">
+          <div class="form-label-row">
+            <label>Target Environment URL</label>
+            <button type="button" class="btn-clear-field" onclick="clearField('envUrl')">✖ נקה</button>
+          </div>
+          <input type="text" id="envUrl" value="https://qapersonal.shamir.com/" 
+                 placeholder="הקלד כתובת סביבה (למשל https://qa.shamir.com/)..."
+                 onfocus="handleFieldFocus(this)" 
+                 onclick="this.select()" 
+                 oninput="renderEmail()">
         </div>
-
-
 
         <label>אפשרויות תצוגה והדגשה</label>
         
         <div class="switch-row">
           <span class="switch-label">
             <span>📑</span>
-            <span>קבץ לפי סוגי משימות (Grouping by Type)</span>
+            <span>קבץ לפי סוגי משימות (Grouping by Priority)</span>
           </span>
           <input type="checkbox" id="groupByType" class="switch-input" checked onchange="renderEmail()">
         </div>
@@ -302,19 +339,20 @@
           <input type="checkbox" id="solidBadges" class="switch-input" checked onchange="renderEmail()">
         </div>
 
+        <!-- Ordered by user specification: Requirement, Feature, Bug, Issue, Task -->
         <div class="color-legend">
-          <span class="legend-item legend-bug">● Bug</span>
-          <span class="legend-item legend-task">● Task</span>
           <span class="legend-item legend-req">● Requirement</span>
           <span class="legend-item legend-feature">● Feature</span>
+          <span class="legend-item legend-bug">● Bug</span>
           <span class="legend-item legend-issue">● Issue</span>
+          <span class="legend-item legend-task">● Task</span>
         </div>
 
         <div class="form-group">
           <label>WYSIWYG Paste Area (הדבק מטבלת Azure DevOps)</label>
           <div id="wysiwygInput" class="wysiwyg-paste-area" contenteditable="true" data-placeholder="הדבק כאן שורות שהעתקת מ-Azure DevOps (Ctrl+V)..."></div>
           <div class="paste-hint">
-            💡 <strong>איך זה עובד?</strong> סמן שורות ב-Azure DevOps והעתק (Ctrl+C). הדבק כאן (Ctrl+V) – הקישורים האמיתיים ל-Work Items יישמרו והסוגים יצבעו אוטומטית!
+            💡 <strong>איך זה עובד?</strong> סמן שורות ב-Azure DevOps והעתק (Ctrl+C). הדבק כאן (Ctrl+V) – הקישורים האמיתיים ל-Work Items יישמרו והסוגים ימוינו לפי סדר החשיבות!
           </div>
         </div>
 
@@ -349,27 +387,34 @@
   <div id="toast" class="toast">✓ הועתק ללוח בהצלחה! פשוט הדבק באאוטלוק (Ctrl + V) עם כל הצבעים והעיצוב.</div>
 
   <script>
+    // Official Shamir Red Logo directly from shamir.com
+    const shamirRedLogoUrl = "https://shamir.com/wp-content/uploads/2022/08/shamir-logos-formats-2020-conv-shamir-secondary-logo-cmyk@3x-1-360x101-1.png";
+
+    // Clear and focus helpers for easy project switching
+    function handleFieldFocus(input) {
+      if (!input.dataset.cleared) {
+        input.value = '';
+        input.dataset.cleared = 'true';
+        renderEmail();
+      } else {
+        input.select();
+      }
+    }
+
+    function clearField(id) {
+      const input = document.getElementById(id);
+      input.value = '';
+      input.dataset.cleared = 'true';
+      input.focus();
+      renderEmail();
+    }
+
     // Azure DevOps Work Item Type Palette and Metadata
+    // Priority order specified: 1. Requirement, 2. Feature, 3. Bug, 4. Issue, 5. Task
     function getItemTypeMeta(rawType) {
       const t = (rawType || '').trim().toLowerCase();
       
-      if (t.includes('bug')) {
-        return {
-          key: 'bug',
-          label: 'Bug',
-          plural: 'Bugs',
-          icon: '🐞',
-          dotColor: '#CC293D',
-          border: '#CC293D',
-          softBg: '#FDF3F4',
-          softText: '#A80000',
-          solidBg: '#CC293D',
-          solidText: '#FFFFFF',
-          headerBg: '#FDF2F2',
-          headerBorder: '#F87171',
-          order: 1
-        };
-      }
+      // 1. Requirement
       if (t.includes('req') || t.includes('story') || t.includes('user story')) {
         return {
           key: 'requirement',
@@ -384,9 +429,10 @@
           solidText: '#FFFFFF',
           headerBg: '#EFF6FF',
           headerBorder: '#60A5FA',
-          order: 2
+          order: 1
         };
       }
+      // 2. Feature
       if (t.includes('feature')) {
         return {
           key: 'feature',
@@ -401,26 +447,28 @@
           solidText: '#FFFFFF',
           headerBg: '#FAF5FF',
           headerBorder: '#C084FC',
+          order: 2
+        };
+      }
+      // 3. Bug
+      if (t.includes('bug')) {
+        return {
+          key: 'bug',
+          label: 'Bug',
+          plural: 'Bugs',
+          icon: '🐞',
+          dotColor: '#CC293D',
+          border: '#CC293D',
+          softBg: '#FDF3F4',
+          softText: '#A80000',
+          solidBg: '#CC293D',
+          solidText: '#FFFFFF',
+          headerBg: '#FDF2F2',
+          headerBorder: '#F87171',
           order: 3
         };
       }
-      if (t.includes('task')) {
-        return {
-          key: 'task',
-          label: 'Task',
-          plural: 'Tasks',
-          icon: '📋',
-          dotColor: '#F2CB1D',
-          border: '#D97706',
-          softBg: '#FFFDF0',
-          softText: '#78350F',
-          solidBg: '#F2CB1D',
-          solidText: '#323130',
-          headerBg: '#FFFBEB',
-          headerBorder: '#FBBF24',
-          order: 4
-        };
-      }
+      // 4. Issue
       if (t.includes('issue') || t.includes('impediment')) {
         return {
           key: 'issue',
@@ -435,9 +483,28 @@
           solidText: '#FFFFFF',
           headerBg: '#FFF7ED',
           headerBorder: '#FB923C',
+          order: 4
+        };
+      }
+      // 5. Task
+      if (t.includes('task')) {
+        return {
+          key: 'task',
+          label: 'Task',
+          plural: 'Tasks',
+          icon: '📋',
+          dotColor: '#F2CB1D',
+          border: '#D97706',
+          softBg: '#FFFDF0',
+          softText: '#78350F',
+          solidBg: '#F2CB1D',
+          solidText: '#323130',
+          headerBg: '#FFFBEB',
+          headerBorder: '#FBBF24',
           order: 5
         };
       }
+      // Other
       return {
         key: 'other',
         label: rawType.trim() || 'Work Item',
@@ -455,13 +522,15 @@
       };
     }
 
-    // Default sample items matching actual Shamir Personal QA deployment
+    // Default sample items matching order: Requirement, Feature, Bug, Issue, Task
     let parsedItems = [
+      { id: "157229", url: "", type: "Requirement", title: "Environment setup", tag: "RnA Investigation complete", assignee: "Tzur Bracha", state: "Resolved" },
+      { id: "157400", url: "", type: "Feature", title: "New Customer Account Dashboard & Analytics", assignee: "Tzur Bracha", state: "Resolved" },
       { id: "150890", url: "", type: "Bug", title: "QA – When login to Sweden the header is HQ", assignee: "Tzur Bracha", state: "Resolved" },
       { id: "155765", url: "", type: "Bug", title: "Order tracking - Germany - Missing reset button for date filtering", assignee: "Oren Shammai", state: "Resolved" },
       { id: "156854", url: "", type: "Bug", title: "'Try the new Order Tracking (beta)' in order tracking give an error message 404 page not found", assignee: "Oren Shammai", state: "Resolved" },
       { id: "156982", url: "", type: "Bug", title: "Order refactoring - Missing error massage of empty data", assignee: "Oren Shammai", state: "Resolved" },
-      { id: "157229", url: "", type: "Requirement", title: "Environment setup", tag: "RnA Investigation complete", assignee: "Tzur Bracha", state: "Resolved" },
+      { id: "156890", url: "", type: "Issue", title: "Intermittent payment gateway timeout during high load", assignee: "Tzur Bracha", state: "Closed" },
       { id: "157213", url: "", type: "Task", title: "Setup DEV development environment for shamir.com (Bedrock + DDEV)", assignee: "Tzur Bracha", state: "Resolved" },
       { id: "156779", url: "", type: "Task", title: "Initial onboarding task to get the local environment up and running", assignee: "Tzur Bracha", state: "Closed" }
     ];
@@ -710,7 +779,6 @@
       const isGrouped = document.getElementById('groupByType').checked;
       const showSummary = document.getElementById('showSummaryPills').checked;
       const isSolid = document.getElementById('solidBadges').checked;
-      const logoUrl = 'https://shamir.com/wp-content/uploads/2022/08/shamir-logos-formats-2020-conv-shamir-secondary-logo-cmyk@3x-1-360x101-1.png';
 
       // Group items and calculate counts
       const countsByType = {};
@@ -725,10 +793,10 @@
         groupsMap[meta.key].list.push(it);
       });
 
-      // Sort groups by defined order (Bug, Requirement, Feature, Task, Issue)
+      // Sort groups strictly by defined priority order (Requirement, Feature, Bug, Issue, Task)
       const sortedGroups = Object.values(groupsMap).sort((a, b) => a.meta.order - b.meta.order);
 
-      // Build Summary Pills HTML
+      // Build Summary Pills HTML in priority order
       let summaryPillsHtml = '';
       if (showSummary) {
         const pills = Object.values(countsByType)
@@ -786,9 +854,16 @@
           `;
         }).join('');
       } else {
+        // When not grouped, sort all items by priority order
+        const sortedItems = [...items].sort((a, b) => {
+          const ma = getItemTypeMeta(a.type);
+          const mb = getItemTypeMeta(b.type);
+          return ma.order - mb.order;
+        });
+
         tablesContentHtml = `
           <div style="margin-top: 16px;">
-            ${buildTableHtml(items, isSolid)}
+            ${buildTableHtml(sortedItems, isSolid)}
           </div>
         `;
       }
@@ -812,7 +887,7 @@
                         <td valign="middle">
                           <!-- Official Shamir Red Logo with local fallback -->
                           <a href="https://shamir.com/" target="_blank" style="text-decoration: none; display: inline-block;">
-                            <img src="${logoUrl}" onerror="this.onerror=null; this.src='shamir_logo.png'" width="130" height="36" border="0" alt="Shamir" style="display:block; width: 130px; height: auto; max-height: 38px;" />
+                            <img src="${shamirRedLogoUrl}" onerror="this.onerror=null; this.src='shamir_logo.png'" width="130" height="36" border="0" alt="Shamir" style="display:block; width: 130px; height: auto; max-height: 38px;" />
                           </a>
                         </td>
                       </tr>
@@ -936,7 +1011,6 @@
     function copyRichText() {
       const preview = document.getElementById('previewBox');
       
-      // Focus the contenteditable element so execCommand is allowed by browser
       preview.focus();
       
       const selection = window.getSelection();
