@@ -333,6 +333,14 @@
 
         <div class="switch-row">
           <span class="switch-label">
+            <span>📊</span>
+            <span>הצג גרף פאי / דונאט של חלוקת הפריטים (Pie Chart)</span>
+          </span>
+          <input type="checkbox" id="showPieChart" class="switch-input" checked onchange="renderEmail()">
+        </div>
+
+        <div class="switch-row">
+          <span class="switch-label">
             <span>🎨</span>
             <span>תגים מלאים ובולטים (Solid Badges)</span>
           </span>
@@ -778,6 +786,7 @@
       const envUrl = document.getElementById('envUrl').value || 'https://qapersonal.shamir.com/';
       const isGrouped = document.getElementById('groupByType').checked;
       const showSummary = document.getElementById('showSummaryPills').checked;
+      const showPieChart = document.getElementById('showPieChart') ? document.getElementById('showPieChart').checked : true;
       const isSolid = document.getElementById('solidBadges').checked;
 
       // Group items and calculate counts
@@ -825,6 +834,48 @@
               </tr>
             </table>
           </div>
+        `;
+      }
+
+      // Build Pie / Donut Distribution Chart HTML
+      let pieChartCellHtml = '';
+      if (showPieChart && items.length > 0) {
+        const chartLabels = sortedGroups.map(g => g.meta.label);
+        const chartData = sortedGroups.map(g => g.list.length);
+        const chartColors = sortedGroups.map(g => g.meta.solidBg);
+
+        const chartConfig = {
+          type: 'doughnut',
+          data: {
+            labels: chartLabels,
+            datasets: [{
+              data: chartData,
+              backgroundColor: chartColors,
+              borderWidth: 2,
+              borderColor: '#ffffff'
+            }]
+          },
+          options: {
+            plugins: {
+              legend: false,
+              datalabels: { display: false }
+            },
+            cutoutPercentage: 55
+          }
+        };
+
+        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=90&h=90&bkg=transparent`;
+
+        pieChartCellHtml = `
+          <td width="96" align="right" valign="middle" style="padding-left: 14px;">
+            <table border="0" cellspacing="0" cellpadding="0" align="right">
+              <tr>
+                <td align="center">
+                  <img src="${chartUrl}" width="86" height="86" alt="Distribution Chart" title="Work Items Distribution" style="display: block; width: 86px; height: 86px; border: 0;" onerror="this.style.display='none'" />
+                </td>
+              </tr>
+            </table>
+          </td>
         `;
       }
 
@@ -938,14 +989,20 @@
                 <!-- Main Content Area -->
                 <tr>
                   <td style="padding: 24px 32px 32px;">
-                    <div>
-                      <span style="font-size: 16px; font-weight: bold; color: #0f172a;">Included Work Items in v${version}</span>
-                      <span style="display: inline-block; margin-left: 8px; font-size: 12px; font-weight: bold; color: #475569; background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 10px;">
-                        ${items.length} Total
-                      </span>
-                    </div>
-
-                    ${summaryPillsHtml}
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 6px;">
+                      <tr>
+                        <td valign="middle" align="left">
+                          <div>
+                            <span style="font-size: 16px; font-weight: bold; color: #0f172a;">Included Work Items in v${version}</span>
+                            <span style="display: inline-block; margin-left: 8px; font-size: 12px; font-weight: bold; color: #475569; background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 10px;">
+                              ${items.length} Total
+                            </span>
+                          </div>
+                          ${summaryPillsHtml}
+                        </td>
+                        ${pieChartCellHtml}
+                      </tr>
+                    </table>
 
                     ${tablesContentHtml}
                   </td>
