@@ -693,7 +693,11 @@
           <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
             <tr>
               <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${meta.solidText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
-                ${meta.label}
+                <font color="${meta.solidText}" style="color: ${meta.solidText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                  <span style="color: ${meta.solidText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                    ${meta.label}
+                  </span>
+                </font>
               </td>
             </tr>
           </table>
@@ -706,7 +710,11 @@
                 <font color="${meta.dotColor}">&#9679;</font>
               </td>
               <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 7px 2px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${meta.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
-                ${meta.label}
+                <font color="${meta.softText}" style="color: ${meta.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                  <span style="color: ${meta.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                    ${meta.label}
+                  </span>
+                </font>
               </td>
             </tr>
           </table>
@@ -757,7 +765,11 @@
             <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
               <tr>
                 <td bgcolor="${stateBg}" style="background-color: ${stateBg}; border: 1px solid ${stateBorder}; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${stateColor}; font-family: 'Segoe UI', Arial, sans-serif; line-height: 15px;">
-                  ${item.state}
+                  <font color="${stateColor}" style="color: ${stateColor}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                    <span style="color: ${stateColor};">
+                      ${item.state}
+                    </span>
+                  </font>
                 </td>
               </tr>
             </table>
@@ -840,7 +852,9 @@
                       <font color="${m.dotColor}">&#9679;</font>
                     </td>
                     <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; padding: 3px 9px 3px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${m.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap;">
-                      ${count} ${count === 1 ? m.label : m.plural}
+                      <font color="${m.softText}" style="color: ${m.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                        ${count} ${count === 1 ? m.label : m.plural}
+                      </font>
                     </td>
                   </tr>
                 </table>
@@ -954,7 +968,9 @@
                     <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
                       <tr>
                         <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; border: 1px solid ${m.border}; border-radius: 10px; padding: 1px 7px; font-size: 11px; font-weight: 600; color: ${m.softText}; font-family: 'Segoe UI', Arial, sans-serif; line-height: 14px;">
-                          ${count}
+                          <font color="${m.softText}" style="color: ${m.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                            ${count}
+                          </font>
                         </td>
                       </tr>
                     </table>
