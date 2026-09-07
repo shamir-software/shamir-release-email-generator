@@ -687,7 +687,6 @@
     }
 
     // Build Type Badge HTML
-    // Build Type Badge HTML
     function buildTypeBadge(meta, isSolid) {
       if (isSolid) {
         return `
@@ -701,14 +700,12 @@
         `;
       } else {
         return `
-          <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
+          <table border="0" cellspacing="0" cellpadding="0" bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; border: 1px solid ${meta.border}; border-radius: 4px; display: inline-table;">
             <tr>
-              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; border: 1px solid ${meta.border}; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: 600; color: ${meta.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
-                <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-right: 3px;">
-                  <tr>
-                    <td width="6" height="6" bgcolor="${meta.dotColor}" style="background-color: ${meta.dotColor}; width: 6px; height: 6px; border-radius: 50%; font-size: 1px; line-height: 1px;">&nbsp;</td>
-                  </tr>
-                </table>
+              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 2px 2px 6px; vertical-align: middle; color: ${meta.dotColor}; font-size: 10px; line-height: 1;">
+                <font color="${meta.dotColor}">&#9679;</font>
+              </td>
+              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 7px 2px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${meta.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
                 ${meta.label}
               </td>
             </tr>
@@ -839,12 +836,10 @@
               <td style="padding-right: 8px; padding-bottom: 6px;">
                 <table border="0" cellspacing="0" cellpadding="0" bgcolor="${m.softBg}" style="background-color: ${m.softBg}; border: 1px solid ${m.border}; border-radius: 12px; font-family: 'Segoe UI', Arial, sans-serif;">
                   <tr>
-                    <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; padding: 3px 10px; font-size: 11px; font-weight: 600; color: ${m.softText}; white-space: nowrap; border-radius: 12px;">
-                      <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-right: 4px;">
-                        <tr>
-                          <td width="7" height="7" bgcolor="${m.dotColor}" style="background-color: ${m.dotColor}; width: 7px; height: 7px; border-radius: 50%; font-size: 1px; line-height: 1px;">&nbsp;</td>
-                        </tr>
-                      </table>
+                    <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; padding: 3px 2px 3px 9px; vertical-align: middle; color: ${m.dotColor}; font-size: 11px; line-height: 1;">
+                      <font color="${m.dotColor}">&#9679;</font>
+                    </td>
+                    <td bgcolor="${m.softBg}" style="background-color: ${m.softBg}; padding: 3px 9px 3px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${m.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap;">
                       ${count} ${count === 1 ? m.label : m.plural}
                     </td>
                   </tr>
@@ -880,7 +875,7 @@
               data: chartData,
               backgroundColor: chartColors,
               borderWidth: 2,
-              borderColor: '#f8fafc'
+              borderColor: '#ffffff'
             }]
           },
           options: {
@@ -892,7 +887,7 @@
           }
         };
 
-        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=160&h=160&devicePixelRatio=2&bkg=f8fafc`;
+        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=160&h=160&devicePixelRatio=2&bkg=transparent`;
 
         let legendCellHtml = '';
         if (showChartLegend) {
@@ -902,17 +897,15 @@
             const pct = Math.round((count / totalCount) * 100);
             return `
               <tr>
-                <td bgcolor="#f8fafc" style="background-color: #f8fafc; padding: 2px 0; white-space: nowrap;">
-                  <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table; vertical-align: middle; margin-right: 5px;">
-                    <tr>
-                      <td width="8" height="8" bgcolor="${m.solidBg}" style="background-color: ${m.solidBg}; width: 8px; height: 8px; border-radius: 2px; font-size: 1px; line-height: 1px;">&nbsp;</td>
-                    </tr>
-                  </table>
-                  <span style="color: #334155; font-weight: 600; font-size: 11px; font-family: 'Segoe UI', Arial, sans-serif; vertical-align: middle;">${m.label}</span>
+                <td bgcolor="#f8fafc" width="12" align="left" valign="middle" style="background-color: #f8fafc; padding: 2px 0; color: ${m.solidBg}; font-size: 12px; line-height: 1;">
+                  <font color="${m.solidBg}">&#9679;</font>
                 </td>
-                <td bgcolor="#f8fafc" align="right" style="background-color: #f8fafc; padding: 2px 0 2px 10px; white-space: nowrap;">
+                <td bgcolor="#f8fafc" align="left" valign="middle" style="background-color: #f8fafc; padding: 2px 10px 2px 4px; white-space: nowrap;">
+                  <span style="color: #334155; font-weight: 600; font-size: 11px; font-family: 'Segoe UI', Arial, sans-serif;">${m.label}</span>
+                </td>
+                <td bgcolor="#f8fafc" align="right" valign="middle" style="background-color: #f8fafc; padding: 2px 0 2px 6px; white-space: nowrap;">
                   <span style="color: #0f172a; font-weight: 600; font-size: 11px; font-family: 'Segoe UI', Arial, sans-serif;">${count}</span>
-                  <span style="color: #64748b; font-size: 10px; font-weight: normal; font-family: 'Segoe UI', Arial, sans-serif; margin-left: 2px;">(${pct}%)</span>
+                  <span style="color: #64748b; font-size: 10px; font-family: 'Segoe UI', Arial, sans-serif; margin-left: 2px;">(${pct}%)</span>
                 </td>
               </tr>
             `;
@@ -931,7 +924,7 @@
           <td align="right" valign="middle" style="padding-left: 16px;">
             <table border="0" cellspacing="0" cellpadding="0" bgcolor="#f8fafc" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px;">
               <tr>
-                <td bgcolor="#f8fafc" valign="middle" align="center" style="background-color: #f8fafc; padding: 8px 10px; ${showChartLegend ? 'padding-right: 8px;' : ''}">
+                <td bgcolor="#f8fafc" valign="middle" align="center" style="background-color: #f8fafc; padding: 10px 12px; ${showChartLegend ? 'padding-right: 10px;' : ''}">
                   <img src="${chartUrl}" width="76" height="76" alt="Distribution Chart" title="Work Items Distribution" style="display: block; width: 76px; height: 76px; border: 0;" onerror="this.style.display='none'" />
                 </td>
                 ${legendCellHtml}
