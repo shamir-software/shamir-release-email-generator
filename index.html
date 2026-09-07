@@ -693,11 +693,13 @@
           <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
             <tr>
               <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${meta.solidText} !important; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px; mso-color-alt: ${meta.solidText};">
-                <font color="${meta.solidText}" style="color: ${meta.solidText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
-                  <b style="color: ${meta.solidText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; mso-color-alt: ${meta.solidText};">
-                    ${meta.label}
-                  </b>
-                </font>
+                <a style="color: ${meta.solidText} !important; text-decoration: none; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; cursor: default; pointer-events: none;">
+                  <font color="${meta.solidText}" style="color: ${meta.solidText} !important;">
+                    <span style="color: ${meta.solidText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                      ${meta.label}
+                    </span>
+                  </font>
+                </a>
               </td>
             </tr>
           </table>
@@ -710,11 +712,13 @@
                 <font color="${meta.dotColor}">&#9679;</font>
               </td>
               <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 7px 2px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${meta.softText} !important; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px; mso-color-alt: ${meta.softText};">
-                <font color="${meta.softText}" style="color: ${meta.softText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
-                  <b style="color: ${meta.softText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; mso-color-alt: ${meta.softText};">
-                    ${meta.label}
-                  </b>
-                </font>
+                <a style="color: ${meta.softText} !important; text-decoration: none; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; cursor: default; pointer-events: none;">
+                  <font color="${meta.softText}" style="color: ${meta.softText} !important;">
+                    <span style="color: ${meta.softText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                      ${meta.label}
+                    </span>
+                  </font>
+                </a>
               </td>
             </tr>
           </table>
@@ -751,7 +755,7 @@
           <td style="padding: 9px 12px; font-size: 12px; width: 75px; font-family: 'Segoe UI', Arial, sans-serif;">
             ${idFormatted}
           </td>
-          <td style="padding: 9px 12px; width: 105px;">
+          <td style="padding: 9px 12px; width: 105px; color: ${isSolid ? meta.solidText : meta.softText};">
             ${buildTypeBadge(meta, isSolid)}
           </td>
           <td style="padding: 9px 12px; font-size: 13px; color: #0f172a; font-weight: 400; line-height: 1.4; font-family: 'Segoe UI', Arial, sans-serif;">
