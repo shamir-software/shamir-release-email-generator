@@ -1,0 +1,985 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <title>Shamir - מחולל מייל שחרור גרסה (צבעי Azure DevOps)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      margin: 0;
+      padding: 24px;
+      direction: rtl;
+    }
+    .container { max-width: 1400px; margin: 0 auto; }
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 24px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #334155;
+      direction: ltr;
+    }
+    .logo-box { display: flex; align-items: center; gap: 14px; }
+    .logo-title { font-size: 20px; font-weight: 700; color: #f8fafc; }
+    .logo-badge { background: #e11428; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+    .azure-badge { background: #0078d4; color: #fff; font-size: 11px; font-weight: 700; padding: 3px 8px; border-radius: 4px; }
+    
+    .grid {
+      display: grid;
+      grid-template-columns: 460px 1fr;
+      gap: 24px;
+      direction: ltr;
+    }
+    .card {
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 12px;
+      padding: 22px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+    }
+    .form-group { margin-bottom: 16px; text-align: left; }
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      color: #94a3b8;
+      margin-bottom: 6px;
+    }
+    input[type="text"], select {
+      width: 100%;
+      background: #0f172a;
+      border: 1px solid #475569;
+      color: #f8fafc;
+      padding: 10px 12px;
+      border-radius: 6px;
+      font-size: 13px;
+      outline: none;
+      transition: border 0.2s;
+    }
+    input[type="text"]:focus, select:focus { border-color: #e11428; }
+
+    /* Switch styling */
+    .switch-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #0f172a;
+      padding: 10px 14px;
+      border-radius: 6px;
+      border: 1px solid #334155;
+      margin-bottom: 12px;
+    }
+    .switch-label {
+      font-size: 13px;
+      color: #cbd5e1;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .switch-input {
+      cursor: pointer;
+      width: 18px;
+      height: 18px;
+      accent-color: #e11428;
+    }
+
+    /* Legend showing Azure colors */
+    .color-legend {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 8px;
+      margin-bottom: 16px;
+    }
+    .legend-item {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 4px;
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+    }
+    .legend-bug { background: #CC293D; color: #fff; }
+    .legend-task { background: #F2CB1D; color: #323130; }
+    .legend-req { background: #0078D4; color: #fff; }
+    .legend-feature { background: #773B93; color: #fff; }
+    .legend-issue { background: #D83B01; color: #fff; }
+
+    /* Rich WYSIWYG Paste Area */
+    .wysiwyg-paste-area {
+      width: 100%;
+      min-height: 160px;
+      max-height: 220px;
+      overflow-y: auto;
+      background: #0b1120;
+      border: 2px dashed #475569;
+      border-radius: 8px;
+      padding: 14px;
+      color: #cbd5e1;
+      font-size: 13px;
+      text-align: left;
+      outline: none;
+      transition: all 0.2s;
+    }
+    .wysiwyg-paste-area:focus {
+      border-color: #e11428;
+      background: #0f172a;
+    }
+    .wysiwyg-paste-area.has-content {
+      border-style: solid;
+      border-color: #10b981;
+    }
+    .paste-hint {
+      color: #64748b;
+      font-size: 12px;
+      margin-top: 6px;
+      line-height: 1.4;
+      text-align: right;
+      direction: rtl;
+    }
+
+    button.btn-primary {
+      width: 100%;
+      background: #e11428;
+      color: #fff;
+      font-weight: 700;
+      padding: 12px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: background 0.2s;
+    }
+    button.btn-primary:hover { background: #b90e1f; }
+
+    .preview-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      direction: ltr;
+      flex-wrap: wrap;
+      gap: 10px;
+    }
+    .preview-actions {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .editable-badge {
+      background: #334155;
+      color: #94a3b8;
+      font-size: 11px;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    button.btn-copy {
+      background: #059669;
+      color: #fff;
+      font-weight: 700;
+      padding: 10px 18px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: background 0.2s;
+      box-shadow: 0 2px 8px rgba(5,150,105,0.3);
+    }
+    button.btn-copy:hover { background: #047857; }
+
+    button.btn-secondary {
+      background: #334155;
+      color: #f1f5f9;
+      font-weight: 600;
+      padding: 10px 14px;
+      border: 1px solid #475569;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 13px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+    button.btn-secondary:hover { background: #475569; }
+
+    .preview-container {
+      background: #f1f5f9;
+      padding: 20px;
+      border-radius: 8px;
+      overflow-x: auto;
+      max-height: 800px;
+    }
+
+    .toast {
+      display: none;
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #059669;
+      color: white;
+      padding: 14px 28px;
+      border-radius: 8px;
+      font-weight: 700;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.45);
+      z-index: 100;
+      direction: rtl;
+      font-size: 14px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container">
+    <header>
+      <div class="logo-box">
+        <span class="logo-title">Shamir Release Email Builder</span>
+        <span class="logo-badge">R&amp;D</span>
+        <span class="azure-badge">Azure DevOps Ready</span>
+      </div>
+    </header>
+
+    <div class="grid">
+      <!-- Left Controls -->
+      <div class="card">
+        <div class="form-group">
+          <label>Component / Project Name</label>
+          <input type="text" id="componentName" value="personal.shamir.com" oninput="renderEmail()">
+        </div>
+
+        <div class="form-group">
+          <label>Release Version</label>
+          <input type="text" id="releaseVersion" value="2.2.0.4" oninput="renderEmail()">
+        </div>
+
+        <div class="form-group">
+          <label>Target Environment URL</label>
+          <input type="text" id="envUrl" value="https://qapersonal.shamir.com/" oninput="renderEmail()">
+        </div>
+
+
+
+        <label>אפשרויות תצוגה והדגשה</label>
+        
+        <div class="switch-row">
+          <span class="switch-label">
+            <span>📑</span>
+            <span>קבץ לפי סוגי משימות (Grouping by Type)</span>
+          </span>
+          <input type="checkbox" id="groupByType" class="switch-input" checked onchange="renderEmail()">
+        </div>
+
+        <div class="switch-row">
+          <span class="switch-label">
+            <span>🏷️</span>
+            <span>הצג שורת סיכום צבעונית בכותרת (Summary Pills)</span>
+          </span>
+          <input type="checkbox" id="showSummaryPills" class="switch-input" checked onchange="renderEmail()">
+        </div>
+
+        <div class="switch-row">
+          <span class="switch-label">
+            <span>🎨</span>
+            <span>תגים מלאים ובולטים (Solid Badges)</span>
+          </span>
+          <input type="checkbox" id="solidBadges" class="switch-input" checked onchange="renderEmail()">
+        </div>
+
+        <div class="color-legend">
+          <span class="legend-item legend-bug">● Bug</span>
+          <span class="legend-item legend-task">● Task</span>
+          <span class="legend-item legend-req">● Requirement</span>
+          <span class="legend-item legend-feature">● Feature</span>
+          <span class="legend-item legend-issue">● Issue</span>
+        </div>
+
+        <div class="form-group">
+          <label>WYSIWYG Paste Area (הדבק מטבלת Azure DevOps)</label>
+          <div id="wysiwygInput" class="wysiwyg-paste-area" contenteditable="true" data-placeholder="הדבק כאן שורות שהעתקת מ-Azure DevOps (Ctrl+V)..."></div>
+          <div class="paste-hint">
+            💡 <strong>איך זה עובד?</strong> סמן שורות ב-Azure DevOps והעתק (Ctrl+C). הדבק כאן (Ctrl+V) – הקישורים האמיתיים ל-Work Items יישמרו והסוגים יצבעו אוטומטית!
+          </div>
+        </div>
+
+        <button class="btn-primary" onclick="processAndRender()">
+          ⚡ רענן וצור תבנית מעוצבת למייל
+        </button>
+      </div>
+
+      <!-- Right Preview -->
+      <div class="card">
+        <div class="preview-header">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <label style="margin: 0;">תצוגה מקדימה לאאוטלוק</label>
+            <span class="editable-badge">ניתן לערוך ישירות בתצוגה</span>
+          </div>
+          <div class="preview-actions">
+            <button class="btn-secondary" onclick="selectAllForCopy()" title="מסמן את כל הטבלה כך שתוכל ללחוץ ידנית Ctrl+C">
+              🔍 סמן הכל (Select All)
+            </button>
+            <button class="btn-copy" onclick="copyRichText()">
+              📋 העתק לאאוטלוק (Copy for Outlook)
+            </button>
+          </div>
+        </div>
+        <div class="preview-container" id="previewBox" contenteditable="true">
+          <!-- Rendered HTML will appear here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast">✓ הועתק ללוח בהצלחה! פשוט הדבק באאוטלוק (Ctrl + V) עם כל הצבעים והעיצוב.</div>
+
+  <script>
+    // Azure DevOps Work Item Type Palette and Metadata
+    function getItemTypeMeta(rawType) {
+      const t = (rawType || '').trim().toLowerCase();
+      
+      if (t.includes('bug')) {
+        return {
+          key: 'bug',
+          label: 'Bug',
+          plural: 'Bugs',
+          icon: '🐞',
+          dotColor: '#CC293D',
+          border: '#CC293D',
+          softBg: '#FDF3F4',
+          softText: '#A80000',
+          solidBg: '#CC293D',
+          solidText: '#FFFFFF',
+          headerBg: '#FDF2F2',
+          headerBorder: '#F87171',
+          order: 1
+        };
+      }
+      if (t.includes('req') || t.includes('story') || t.includes('user story')) {
+        return {
+          key: 'requirement',
+          label: 'Requirement',
+          plural: 'Requirements',
+          icon: '📘',
+          dotColor: '#0078D4',
+          border: '#0078D4',
+          softBg: '#F0F6FF',
+          softText: '#004C87',
+          solidBg: '#0078D4',
+          solidText: '#FFFFFF',
+          headerBg: '#EFF6FF',
+          headerBorder: '#60A5FA',
+          order: 2
+        };
+      }
+      if (t.includes('feature')) {
+        return {
+          key: 'feature',
+          label: 'Feature',
+          plural: 'Features',
+          icon: '🎯',
+          dotColor: '#773B93',
+          border: '#773B93',
+          softBg: '#FAF5FC',
+          softText: '#551A8B',
+          solidBg: '#773B93',
+          solidText: '#FFFFFF',
+          headerBg: '#FAF5FF',
+          headerBorder: '#C084FC',
+          order: 3
+        };
+      }
+      if (t.includes('task')) {
+        return {
+          key: 'task',
+          label: 'Task',
+          plural: 'Tasks',
+          icon: '📋',
+          dotColor: '#F2CB1D',
+          border: '#D97706',
+          softBg: '#FFFDF0',
+          softText: '#78350F',
+          solidBg: '#F2CB1D',
+          solidText: '#323130',
+          headerBg: '#FFFBEB',
+          headerBorder: '#FBBF24',
+          order: 4
+        };
+      }
+      if (t.includes('issue') || t.includes('impediment')) {
+        return {
+          key: 'issue',
+          label: 'Issue',
+          plural: 'Issues',
+          icon: '⚠️',
+          dotColor: '#D83B01',
+          border: '#D83B01',
+          softBg: '#FFF5F0',
+          softText: '#9A2B00',
+          solidBg: '#D83B01',
+          solidText: '#FFFFFF',
+          headerBg: '#FFF7ED',
+          headerBorder: '#FB923C',
+          order: 5
+        };
+      }
+      return {
+        key: 'other',
+        label: rawType.trim() || 'Work Item',
+        plural: (rawType.trim() || 'Work Item') + 's',
+        icon: '📌',
+        dotColor: '#64748B',
+        border: '#94A3B8',
+        softBg: '#F8FAFC',
+        softText: '#334155',
+        solidBg: '#64748B',
+        solidText: '#FFFFFF',
+        headerBg: '#F1F5F9',
+        headerBorder: '#94A3B8',
+        order: 6
+      };
+    }
+
+    // Default sample items matching actual Shamir Personal QA deployment
+    let parsedItems = [
+      { id: "150890", url: "", type: "Bug", title: "QA – When login to Sweden the header is HQ", assignee: "Tzur Bracha", state: "Resolved" },
+      { id: "155765", url: "", type: "Bug", title: "Order tracking - Germany - Missing reset button for date filtering", assignee: "Oren Shammai", state: "Resolved" },
+      { id: "156854", url: "", type: "Bug", title: "'Try the new Order Tracking (beta)' in order tracking give an error message 404 page not found", assignee: "Oren Shammai", state: "Resolved" },
+      { id: "156982", url: "", type: "Bug", title: "Order refactoring - Missing error massage of empty data", assignee: "Oren Shammai", state: "Resolved" },
+      { id: "157229", url: "", type: "Requirement", title: "Environment setup", tag: "RnA Investigation complete", assignee: "Tzur Bracha", state: "Resolved" },
+      { id: "157213", url: "", type: "Task", title: "Setup DEV development environment for shamir.com (Bedrock + DDEV)", assignee: "Tzur Bracha", state: "Resolved" },
+      { id: "156779", url: "", type: "Task", title: "Initial onboarding task to get the local environment up and running", assignee: "Tzur Bracha", state: "Closed" }
+    ];
+
+    const pasteBox = document.getElementById('wysiwygInput');
+
+    // Handle Rich Paste into ContentEditable
+    pasteBox.addEventListener('paste', function(e) {
+      const clipboardHtml = e.clipboardData.getData('text/html');
+      const clipboardText = e.clipboardData.getData('text/plain');
+
+      if (clipboardHtml) {
+        pasteBox.classList.add('has-content');
+        setTimeout(() => {
+          extractFromDom(pasteBox);
+          renderEmail();
+        }, 100);
+      } else if (clipboardText) {
+        pasteBox.classList.add('has-content');
+        setTimeout(() => {
+          extractFromPlainText(clipboardText);
+          renderEmail();
+        }, 100);
+      }
+    });
+
+    function extractFromDom(container) {
+      const items = [];
+      const tables = container.querySelectorAll('table');
+
+      if (tables.length > 0) {
+        tables.forEach(table => {
+          const rows = table.querySelectorAll('tr');
+          let idIdx = -1, typeIdx = -1, titleIdx = -1, assigneeIdx = -1, stateIdx = -1;
+
+          rows.forEach((tr, rIdx) => {
+            const cells = Array.from(tr.children);
+            const texts = cells.map(c => c.textContent.trim());
+
+            // Header row detection
+            if (texts.some(t => t.toLowerCase() === 'id' || t.toLowerCase() === 'work item type' || t.toLowerCase() === 'title')) {
+              texts.forEach((txt, cIdx) => {
+                const lower = txt.toLowerCase();
+                if (lower === 'id') idIdx = cIdx;
+                else if (lower.includes('type')) typeIdx = cIdx;
+                else if (lower.includes('title')) titleIdx = cIdx;
+                else if (lower.includes('assigned')) assigneeIdx = cIdx;
+                else if (lower.includes('state')) stateIdx = cIdx;
+              });
+              return;
+            }
+
+            // Data rows
+            if (cells.length >= 3) {
+              const actualIdIdx = idIdx !== -1 ? idIdx : 0;
+              const actualTypeIdx = typeIdx !== -1 ? typeIdx : 1;
+              const actualTitleIdx = titleIdx !== -1 ? titleIdx : 2;
+              const actualAssigneeIdx = assigneeIdx !== -1 ? assigneeIdx : (cells.length > 3 ? 3 : -1);
+              const actualStateIdx = stateIdx !== -1 ? stateIdx : (cells.length > 4 ? 4 : -1);
+
+              const idCell = cells[actualIdIdx];
+              if (!idCell) return;
+
+              const idText = idCell.textContent.trim();
+              if (!idText || isNaN(idText)) return;
+
+              let workItemUrl = '';
+              const anchor = idCell.querySelector('a') || tr.querySelector('a[href*="_workitems"]') || tr.querySelector('a');
+              if (anchor && anchor.href) {
+                workItemUrl = anchor.href;
+              }
+
+              const typeText = cells[actualTypeIdx] ? cells[actualTypeIdx].textContent.trim() : 'Task';
+              const titleCell = cells[actualTitleIdx];
+              const titleText = titleCell ? titleCell.textContent.trim() : '';
+              const assigneeText = actualAssigneeIdx !== -1 && cells[actualAssigneeIdx] ? cells[actualAssigneeIdx].textContent.trim() : '';
+              const stateText = actualStateIdx !== -1 && cells[actualStateIdx] ? cells[actualStateIdx].textContent.trim() : 'Resolved';
+
+              items.push({
+                id: idText,
+                url: workItemUrl,
+                type: typeText,
+                title: titleText,
+                assignee: assigneeText,
+                state: stateText
+              });
+            }
+          });
+        });
+      } else {
+        extractFromPlainText(container.innerText);
+        return;
+      }
+
+      if (items.length > 0) {
+        parsedItems = items;
+      }
+    }
+
+    function extractFromPlainText(text) {
+      const items = [];
+      const lines = text.trim().split('\n').map(l => l.trim()).filter(l => l.length > 0);
+      const isTabbed = lines.some(l => l.includes('\t'));
+
+      if (isTabbed) {
+        lines.forEach(line => {
+          const cols = line.split('\t').map(c => c.trim());
+          if (cols[0] && cols[0].toLowerCase() !== 'id' && !isNaN(cols[0])) {
+            items.push({
+              id: cols[0],
+              url: '',
+              type: cols[1] || 'Task',
+              title: cols[2] || '',
+              assignee: cols[3] || '',
+              state: cols[4] || 'Resolved'
+            });
+          }
+        });
+      } else {
+        for (let i = 0; i < lines.length; i++) {
+          if (!isNaN(lines[i]) && lines[i].length >= 5) {
+            items.push({
+              id: lines[i],
+              url: '',
+              type: lines[i+1] || 'Task',
+              title: lines[i+2] || '',
+              assignee: lines[i+3] || '',
+              state: lines[i+4] || 'Resolved'
+            });
+            i += 4;
+          }
+        }
+      }
+
+      if (items.length > 0) {
+        parsedItems = items;
+      }
+    }
+
+    // Build Type Badge HTML
+    function buildTypeBadge(meta, isSolid) {
+      if (isSolid) {
+        return `
+          <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
+            <tr>
+              <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 3px 8px; font-size: 11px; font-weight: bold; color: ${meta.solidText}; font-family: Arial, sans-serif; white-space: nowrap;">
+                ${meta.label}
+              </td>
+            </tr>
+          </table>
+        `;
+      } else {
+        return `
+          <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
+            <tr>
+              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; border: 1px solid ${meta.border}; border-radius: 4px; padding: 2px 7px; font-size: 11px; font-weight: bold; color: ${meta.softText}; font-family: Arial, sans-serif; white-space: nowrap;">
+                <span style="color: ${meta.dotColor}; font-size: 11px; margin-right: 2px;">●</span> ${meta.label}
+              </td>
+            </tr>
+          </table>
+        `;
+      }
+    }
+
+    // Build a single table row
+    function buildItemRow(item, meta, isSolid, idx) {
+      const rowBg = idx % 2 === 1 ? '#f8fafc' : '#ffffff';
+
+      let stateBg = '#ecfdf5';
+      let stateBorder = '#6ee7b7';
+      let stateColor = '#047857';
+
+      if ((item.state || '').toLowerCase() === 'closed') {
+        stateBg = '#f1f5f9';
+        stateBorder = '#cbd5e1';
+        stateColor = '#475569';
+      }
+
+      let idFormatted = `<span style="font-family: monospace, Arial; font-weight: bold; color: #0f172a;">#${item.id}</span>`;
+      if (item.url) {
+        idFormatted = `<a href="${item.url}" target="_blank" style="color: #0078d4; text-decoration: underline; font-family: monospace, Arial; font-weight: bold;"><span style="color: #0078d4;">#${item.id}</span></a>`;
+      }
+
+      let tagHtml = '';
+      if (item.tag) {
+        tagHtml = `<div style="font-size: 11px; color: #7c3aed; font-weight: bold; margin-top: 3px;">🏷️ ${item.tag}</div>`;
+      }
+
+      return `
+        <tr bgcolor="${rowBg}" style="background-color: ${rowBg}; border-bottom: 1px solid #e2e8f0;">
+          <td style="padding: 10px 12px; font-size: 12px; width: 75px;">
+            ${idFormatted}
+          </td>
+          <td style="padding: 10px 12px; width: 105px;">
+            ${buildTypeBadge(meta, isSolid)}
+          </td>
+          <td style="padding: 10px 12px; font-size: 13px; color: #0f172a; font-weight: 500; line-height: 1.4; font-family: Arial, sans-serif;">
+            ${item.title}
+            ${tagHtml}
+          </td>
+          <td style="padding: 10px 12px; font-size: 12px; color: #475569; white-space: nowrap; font-family: Arial, sans-serif; width: 105px;">
+            ${item.assignee || ''}
+          </td>
+          <td align="center" style="padding: 10px 12px; width: 85px;">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td bgcolor="${stateBg}" style="background-color: ${stateBg}; border: 1px solid ${stateBorder}; border-radius: 12px; padding: 2px 8px; font-size: 11px; font-weight: bold; color: ${stateColor}; font-family: Arial, sans-serif;">
+                  ${item.state}
+                </td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      `;
+    }
+
+    // Build table HTML for a list of items
+    function buildTableHtml(items, isSolid) {
+      const rows = items.map((it, idx) => {
+        const meta = getItemTypeMeta(it.type);
+        return buildItemRow(it, meta, isSolid, idx);
+      }).join('');
+
+      return `
+        <table width="100%" border="0" cellspacing="0" cellpadding="0" style="border: 1px solid #cbd5e1; border-collapse: collapse; margin-bottom: 16px;">
+          <thead>
+            <tr bgcolor="#f1f5f9" style="background-color: #f1f5f9;">
+              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 75px;">ID</th>
+              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 105px;">Type</th>
+              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1;">Title</th>
+              <th align="left" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 105px;">Assigned</th>
+              <th align="center" style="padding: 9px 12px; font-size: 11px; font-weight: bold; color: #334155; text-transform: uppercase; border-bottom: 2px solid #cbd5e1; width: 85px;">State</th>
+            </tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+        </table>
+      `;
+    }
+
+    function buildHtml(items) {
+      const component = document.getElementById('componentName').value || 'personal.shamir.com';
+      const version = document.getElementById('releaseVersion').value || '2.2.0.4';
+      const envUrl = document.getElementById('envUrl').value || 'https://qapersonal.shamir.com/';
+      const isGrouped = document.getElementById('groupByType').checked;
+      const showSummary = document.getElementById('showSummaryPills').checked;
+      const isSolid = document.getElementById('solidBadges').checked;
+      const logoUrl = 'https://shamir.com/wp-content/uploads/2022/08/shamir-logos-formats-2020-conv-shamir-secondary-logo-cmyk@3x-1-360x101-1.png';
+
+      // Group items and calculate counts
+      const countsByType = {};
+      const groupsMap = {};
+
+      items.forEach(it => {
+        const meta = getItemTypeMeta(it.type);
+        countsByType[meta.key] = countsByType[meta.key] || { meta: meta, count: 0 };
+        countsByType[meta.key].count++;
+
+        groupsMap[meta.key] = groupsMap[meta.key] || { meta: meta, list: [] };
+        groupsMap[meta.key].list.push(it);
+      });
+
+      // Sort groups by defined order (Bug, Requirement, Feature, Task, Issue)
+      const sortedGroups = Object.values(groupsMap).sort((a, b) => a.meta.order - b.meta.order);
+
+      // Build Summary Pills HTML
+      let summaryPillsHtml = '';
+      if (showSummary) {
+        const pills = Object.values(countsByType)
+          .sort((a, b) => a.meta.order - b.meta.order)
+          .map(entry => {
+            const m = entry.meta;
+            const count = entry.count;
+            return `
+              <td style="padding-right: 8px; padding-bottom: 6px;">
+                <table border="0" cellspacing="0" cellpadding="0" bgcolor="${m.softBg}" style="background-color: ${m.softBg}; border: 1px solid ${m.border}; border-radius: 14px; font-family: Arial, sans-serif;">
+                  <tr>
+                    <td style="padding: 4px 11px; font-size: 11px; font-weight: bold; color: ${m.softText}; white-space: nowrap;">
+                      <span style="color: ${m.dotColor}; font-size: 12px;">●</span> ${count} ${count === 1 ? m.label : m.plural}
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            `;
+          }).join('');
+
+        summaryPillsHtml = `
+          <div style="margin-top: 10px; margin-bottom: 4px;">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                ${pills}
+              </tr>
+            </table>
+          </div>
+        `;
+      }
+
+      // Build Tables (Grouped vs Single)
+      let tablesContentHtml = '';
+      if (isGrouped) {
+        tablesContentHtml = sortedGroups.map(group => {
+          const m = group.meta;
+          const count = group.list.length;
+          return `
+            <div style="margin-top: 24px; margin-bottom: 8px;">
+              <table border="0" cellspacing="0" cellpadding="0" style="margin-bottom: 8px;">
+                <tr>
+                  <td width="10" bgcolor="${m.dotColor}" style="background-color: ${m.dotColor}; border-radius: 3px; font-size: 1px; line-height: 1px;">&nbsp;</td>
+                  <td style="padding-left: 8px;">
+                    <span style="font-size: 15px; font-weight: bold; color: #0f172a; font-family: Arial, sans-serif;">
+                      ${count === 1 ? m.label : m.plural}
+                    </span>
+                    <span style="display: inline-block; margin-left: 6px; font-size: 11px; font-weight: bold; color: ${m.softText}; background-color: ${m.softBg}; border: 1px solid ${m.border}; padding: 1px 7px; border-radius: 10px;">
+                      ${count}
+                    </span>
+                  </td>
+                </tr>
+              </table>
+              ${buildTableHtml(group.list, isSolid)}
+            </div>
+          `;
+        }).join('');
+      } else {
+        tablesContentHtml = `
+          <div style="margin-top: 16px;">
+            ${buildTableHtml(items, isSolid)}
+          </div>
+        `;
+      }
+
+      return `
+        <table id="emailRootTable" width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="#f1f5f9" style="background-color: #f1f5f9; padding: 20px 0; direction: ltr;">
+          <tr>
+            <td align="center">
+              <table width="740" border="0" cellspacing="0" cellpadding="0" bgcolor="#ffffff" style="width: 740px; max-width: 740px; background-color: #ffffff; border: 1px solid #cbd5e1; border-collapse: separate; border-radius: 8px; font-family: Arial, sans-serif; text-align: left;">
+                
+                <!-- Shamir Red Top Accent Line -->
+                <tr>
+                  <td height="5" bgcolor="#e11428" style="background-color: #e11428; line-height: 5px; font-size: 5px;">&nbsp;</td>
+                </tr>
+
+                <!-- Header Block with Logo & Title -->
+                <tr>
+                  <td bgcolor="#ffffff" style="background-color: #ffffff; padding: 26px 32px 20px; border-bottom: 1px solid #e2e8f0;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td valign="middle">
+                          <!-- Official Shamir Red Logo with local fallback -->
+                          <a href="https://shamir.com/" target="_blank" style="text-decoration: none; display: inline-block;">
+                            <img src="${logoUrl}" onerror="this.onerror=null; this.src='shamir_logo.png'" width="130" height="36" border="0" alt="Shamir" style="display:block; width: 130px; height: auto; max-height: 38px;" />
+                          </a>
+                        </td>
+                      </tr>
+                      <tr>
+                        <td style="padding-top: 18px;">
+                          <div style="font-size: 22px; font-weight: bold; color: #0f172a;">
+                            ${component} &bull; v${version}
+                          </div>
+                          <div style="font-size: 13px; color: #64748b; margin-top: 4px;">
+                            Build <strong>${version}</strong> has been successfully deployed and is ready for verification on QA environment.
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Quick Metadata Bar -->
+                <tr>
+                  <td bgcolor="#f8fafc" style="background-color: #f8fafc; border-bottom: 2px solid #e2e8f0; padding: 14px 32px;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td width="26%" valign="top" style="border-right: 1px solid #e2e8f0; padding-right: 12px;">
+                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Component</div>
+                          <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-top: 2px;">${component}</div>
+                        </td>
+                        <td width="22%" valign="top" style="border-right: 1px solid #e2e8f0; padding-left: 12px; padding-right: 12px;">
+                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Version</div>
+                          <div style="font-size: 14px; font-weight: bold; color: #e11428; margin-top: 2px;">${version}</div>
+                        </td>
+                        <td width="22%" valign="top" style="border-right: 1px solid #e2e8f0; padding-left: 12px; padding-right: 12px;">
+                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">Total Items</div>
+                          <div style="font-size: 13px; font-weight: bold; color: #0f172a; margin-top: 2px;">${items.length} Completed</div>
+                        </td>
+                        <td width="30%" valign="top" style="padding-left: 12px;">
+                          <div style="font-size: 11px; font-weight: bold; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px;">QA Environment</div>
+                          <div style="font-size: 13px; font-weight: bold; margin-top: 2px;">
+                            <a href="${envUrl}" target="_blank" style="color: #e11428; text-decoration: none;">
+                              ${envUrl.replace('https://', '').replace(/\/$/, '')} &rarr;
+                            </a>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+                <!-- Main Content Area -->
+                <tr>
+                  <td style="padding: 24px 32px 32px;">
+                    <div>
+                      <span style="font-size: 16px; font-weight: bold; color: #0f172a;">Included Work Items in v${version}</span>
+                      <span style="display: inline-block; margin-left: 8px; font-size: 12px; font-weight: bold; color: #475569; background-color: #f1f5f9; border: 1px solid #cbd5e1; padding: 2px 8px; border-radius: 10px;">
+                        ${items.length} Total
+                      </span>
+                    </div>
+
+                    ${summaryPillsHtml}
+
+                    ${tablesContentHtml}
+                  </td>
+                </tr>
+
+                <!-- Footer Block -->
+                <tr>
+                  <td bgcolor="#f8fafc" style="background-color: #f8fafc; border-top: 1px solid #e2e8f0; padding: 14px 32px; font-size: 11px; color: #64748b;">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                      <tr>
+                        <td style="color: #334155; font-weight: bold;">
+                          Shamir Optical Industry &bull; Web &amp; R&amp;D Team
+                        </td>
+                        <td align="right" style="color: #94a3b8;">
+                          Release ${version} Notification
+                        </td>
+                      </tr>
+                    </table>
+                  </td>
+                </tr>
+
+              </table>
+            </td>
+          </tr>
+        </table>
+      `;
+    }
+
+    function renderEmail() {
+      const html = buildHtml(parsedItems);
+      document.getElementById('previewBox').innerHTML = html;
+    }
+
+    function processAndRender() {
+      if (pasteBox.children.length > 0) {
+        extractFromDom(pasteBox);
+      } else if (pasteBox.innerText.trim()) {
+        extractFromPlainText(pasteBox.innerText);
+      }
+      renderEmail();
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => { toast.style.display = 'none'; }, 4000);
+    }
+
+    // Select the table visually so user can hit Ctrl+C if desired
+    function selectAllForCopy() {
+      const preview = document.getElementById('previewBox');
+      preview.focus();
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      const range = document.createRange();
+      range.selectNodeContents(preview);
+      selection.addRange(range);
+      showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת ואז הדבק באאוטלוק");
+    }
+
+    // Copy for Outlook: Focuses preview, selects contents, and executes copy
+    function copyRichText() {
+      const preview = document.getElementById('previewBox');
+      
+      // Focus the contenteditable element so execCommand is allowed by browser
+      preview.focus();
+      
+      const selection = window.getSelection();
+      selection.removeAllRanges();
+      const range = document.createRange();
+      range.selectNodeContents(preview);
+      selection.addRange(range);
+
+      let copied = false;
+      try {
+        copied = document.execCommand('copy');
+      } catch (err) {
+        copied = false;
+      }
+
+      if (copied) {
+        showToast("✓ הועתק לאאוטלוק בהצלחה! פתח את אאוטלוק והדבק (Ctrl + V)");
+        setTimeout(() => {
+          selection.removeAllRanges();
+        }, 500);
+        return;
+      }
+
+      // Fallback to Clipboard API if execCommand is restricted
+      if (navigator.clipboard && window.ClipboardItem) {
+        const rootTable = preview.querySelector('#emailRootTable') || preview;
+        const htmlBlob = new Blob([rootTable.outerHTML], { type: 'text/html' });
+        const textBlob = new Blob([rootTable.innerText], { type: 'text/plain' });
+        navigator.clipboard.write([
+          new ClipboardItem({ 'text/html': htmlBlob, 'text/plain': textBlob })
+        ]).then(() => {
+          selection.removeAllRanges();
+          showToast("✓ הועתק לאאוטלוק בהצלחה! פתח את אאוטלוק והדבק (Ctrl + V)");
+        }).catch(() => {
+          showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת והדבק באאוטלוק");
+        });
+      } else {
+        showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת והדבק באאוטלוק");
+      }
+    }
+
+    // Initial render
+    renderEmail();
+  </script>
+</body>
+</html>
