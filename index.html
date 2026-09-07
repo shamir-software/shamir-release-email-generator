@@ -339,6 +339,14 @@
           <input type="checkbox" id="showPieChart" class="switch-input" checked onchange="renderEmail()">
         </div>
 
+        <div class="switch-row" id="chartLegendRow">
+          <span class="switch-label">
+            <span>📑</span>
+            <span>הצג מקרא צבעים ואחוזים אלגנטי לצד הגרף (Legend & %)</span>
+          </span>
+          <input type="checkbox" id="showChartLegend" class="switch-input" checked onchange="renderEmail()">
+        </div>
+
         <div class="switch-row">
           <span class="switch-label">
             <span>🎨</span>
@@ -787,7 +795,15 @@
       const isGrouped = document.getElementById('groupByType').checked;
       const showSummary = document.getElementById('showSummaryPills').checked;
       const showPieChart = document.getElementById('showPieChart') ? document.getElementById('showPieChart').checked : true;
+      const showChartLegend = document.getElementById('showChartLegend') ? document.getElementById('showChartLegend').checked : true;
       const isSolid = document.getElementById('solidBadges').checked;
+
+      // Update toggle UI availability
+      const legendRow = document.getElementById('chartLegendRow');
+      if (legendRow) {
+        legendRow.style.opacity = showPieChart ? '1' : '0.4';
+        legendRow.style.pointerEvents = showPieChart ? 'auto' : 'none';
+      }
 
       // Group items and calculate counts
       const countsByType = {};
@@ -837,9 +853,10 @@
         `;
       }
 
-      // Build Pie / Donut Distribution Chart HTML
+      // Build Pie / Donut Distribution Chart HTML with optional Elegant Legend
       let pieChartCellHtml = '';
       if (showPieChart && items.length > 0) {
+        const totalCount = items.length;
         const chartLabels = sortedGroups.map(g => g.meta.label);
         const chartData = sortedGroups.map(g => g.list.length);
         const chartColors = sortedGroups.map(g => g.meta.solidBg);
@@ -860,19 +877,49 @@
               legend: false,
               datalabels: { display: false }
             },
-            cutoutPercentage: 55
+            cutoutPercentage: 52
           }
         };
 
-        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=90&h=90&bkg=transparent`;
+        const chartUrl = `https://quickchart.io/chart?c=${encodeURIComponent(JSON.stringify(chartConfig))}&w=80&h=80&bkg=transparent`;
+
+        let legendCellHtml = '';
+        if (showChartLegend) {
+          const legendRows = sortedGroups.map(group => {
+            const m = group.meta;
+            const count = group.list.length;
+            const pct = Math.round((count / totalCount) * 100);
+            return `
+              <tr>
+                <td style="padding: 1px 0; white-space: nowrap;">
+                  <span style="color: ${m.solidBg}; font-size: 11px; vertical-align: middle;">●</span>
+                  <span style="color: #334155; font-weight: bold; font-size: 11px; margin-left: 3px; vertical-align: middle;">${m.label}</span>
+                </td>
+                <td align="right" style="padding: 1px 0 1px 8px; white-space: nowrap;">
+                  <span style="color: #0f172a; font-weight: bold; font-size: 11px;">${count}</span>
+                  <span style="color: #94a3b8; font-size: 10px; margin-left: 2px;">(${pct}%)</span>
+                </td>
+              </tr>
+            `;
+          }).join('');
+
+          legendCellHtml = `
+            <td valign="middle" align="left" style="border-left: 1px solid #e2e8f0; padding-left: 10px;">
+              <table border="0" cellspacing="0" cellpadding="0" style="font-family: Arial, sans-serif; font-size: 11px; line-height: 1.35;">
+                ${legendRows}
+              </table>
+            </td>
+          `;
+        }
 
         pieChartCellHtml = `
-          <td width="96" align="right" valign="middle" style="padding-left: 14px;">
-            <table border="0" cellspacing="0" cellpadding="0" align="right">
+          <td align="right" valign="middle" style="padding-left: 14px;">
+            <table border="0" cellspacing="0" cellpadding="0" bgcolor="#f8fafc" style="background-color: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 6px 10px;">
               <tr>
-                <td align="center">
-                  <img src="${chartUrl}" width="86" height="86" alt="Distribution Chart" title="Work Items Distribution" style="display: block; width: 86px; height: 86px; border: 0;" onerror="this.style.display='none'" />
+                <td valign="middle" align="center" style="${showChartLegend ? 'padding-right: 10px;' : ''}">
+                  <img src="${chartUrl}" width="72" height="72" alt="Distribution Chart" title="Work Items Distribution" style="display: block; width: 72px; height: 72px; border: 0;" onerror="this.style.display='none'" />
                 </td>
+                ${legendCellHtml}
               </tr>
             </table>
           </td>
