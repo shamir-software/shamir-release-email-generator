@@ -442,7 +442,7 @@
           softBg: '#F0F6FF',
           softText: '#004C87',
           solidBg: '#0078D4',
-          solidText: '#FFFFFF',
+          solidText: '#fffffe',
           headerBg: '#EFF6FF',
           headerBorder: '#60A5FA',
           order: 1
@@ -460,7 +460,7 @@
           softBg: '#FAF5FC',
           softText: '#551A8B',
           solidBg: '#773B93',
-          solidText: '#FFFFFF',
+          solidText: '#fffffe',
           headerBg: '#FAF5FF',
           headerBorder: '#C084FC',
           order: 2
@@ -478,7 +478,7 @@
           softBg: '#FDF3F4',
           softText: '#A80000',
           solidBg: '#CC293D',
-          solidText: '#FFFFFF',
+          solidText: '#fffffe',
           headerBg: '#FDF2F2',
           headerBorder: '#F87171',
           order: 3
@@ -496,7 +496,7 @@
           softBg: '#FFF5F0',
           softText: '#9A2B00',
           solidBg: '#D83B01',
-          solidText: '#FFFFFF',
+          solidText: '#fffffe',
           headerBg: '#FFF7ED',
           headerBorder: '#FB923C',
           order: 4
@@ -531,7 +531,7 @@
         softBg: '#F8FAFC',
         softText: '#334155',
         solidBg: '#64748B',
-        solidText: '#FFFFFF',
+        solidText: '#fffffe',
         headerBg: '#F1F5F9',
         headerBorder: '#94A3B8',
         order: 6
@@ -692,11 +692,11 @@
         return `
           <table border="0" cellspacing="0" cellpadding="0" style="display: inline-table;">
             <tr>
-              <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${meta.solidText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
-                <font color="${meta.solidText}" style="color: ${meta.solidText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
-                  <span style="color: ${meta.solidText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+              <td bgcolor="${meta.solidBg}" style="background-color: ${meta.solidBg}; border-radius: 4px; padding: 2px 8px; font-size: 11px; font-weight: 600; color: ${meta.solidText} !important; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px; mso-color-alt: ${meta.solidText};">
+                <font color="${meta.solidText}" style="color: ${meta.solidText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                  <b style="color: ${meta.solidText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; mso-color-alt: ${meta.solidText};">
                     ${meta.label}
-                  </span>
+                  </b>
                 </font>
               </td>
             </tr>
@@ -709,11 +709,11 @@
               <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 2px 2px 6px; vertical-align: middle; color: ${meta.dotColor}; font-size: 10px; line-height: 1;">
                 <font color="${meta.dotColor}">&#9679;</font>
               </td>
-              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 7px 2px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${meta.softText}; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px;">
-                <font color="${meta.softText}" style="color: ${meta.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
-                  <span style="color: ${meta.softText}; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+              <td bgcolor="${meta.softBg}" style="background-color: ${meta.softBg}; padding: 2px 7px 2px 0; vertical-align: middle; font-size: 11px; font-weight: 600; color: ${meta.softText} !important; font-family: 'Segoe UI', Arial, sans-serif; white-space: nowrap; line-height: 16px; mso-color-alt: ${meta.softText};">
+                <font color="${meta.softText}" style="color: ${meta.softText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif;">
+                  <b style="color: ${meta.softText} !important; font-size: 11px; font-weight: 600; font-family: 'Segoe UI', Arial, sans-serif; mso-color-alt: ${meta.softText};">
                     ${meta.label}
-                  </span>
+                  </b>
                 </font>
               </td>
             </tr>
@@ -1145,48 +1145,39 @@
       showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת ואז הדבק באאוטלוק");
     }
 
-    // Copy for Outlook: Focuses preview, selects contents, and executes copy
+    // Copy for Outlook: Focuses preview, writes clean HTML to clipboard
     function copyRichText() {
       const preview = document.getElementById('previewBox');
-      
-      preview.focus();
-      
-      const selection = window.getSelection();
-      selection.removeAllRanges();
-      const range = document.createRange();
-      range.selectNodeContents(preview);
-      selection.addRange(range);
+      const rootTable = preview.querySelector('#emailRootTable') || preview;
 
-      let copied = false;
-      try {
-        copied = document.execCommand('copy');
-      } catch (err) {
-        copied = false;
+      function fallbackExecCopy() {
+        preview.focus();
+        const selection = window.getSelection();
+        selection.removeAllRanges();
+        const range = document.createRange();
+        range.selectNodeContents(preview);
+        selection.addRange(range);
+        try {
+          document.execCommand('copy');
+          showToast("✓ הועתק לאאוטלוק בהצלחה! פתח את אאוטלוק והדבק (Ctrl + V)");
+        } catch (err) {
+          showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת והדבק באאוטלוק");
+        }
+        setTimeout(() => { selection.removeAllRanges(); }, 500);
       }
 
-      if (copied) {
-        showToast("✓ הועתק לאאוטלוק בהצלחה! פתח את אאוטלוק והדבק (Ctrl + V)");
-        setTimeout(() => {
-          selection.removeAllRanges();
-        }, 500);
-        return;
-      }
-
-      // Fallback to Clipboard API if execCommand is restricted
       if (navigator.clipboard && window.ClipboardItem) {
-        const rootTable = preview.querySelector('#emailRootTable') || preview;
         const htmlBlob = new Blob([rootTable.outerHTML], { type: 'text/html' });
         const textBlob = new Blob([rootTable.innerText], { type: 'text/plain' });
         navigator.clipboard.write([
           new ClipboardItem({ 'text/html': htmlBlob, 'text/plain': textBlob })
         ]).then(() => {
-          selection.removeAllRanges();
           showToast("✓ הועתק לאאוטלוק בהצלחה! פתח את אאוטלוק והדבק (Ctrl + V)");
         }).catch(() => {
-          showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת והדבק באאוטלוק");
+          fallbackExecCopy();
         });
       } else {
-        showToast("הטבלה סומנה! לחץ עכשיו Ctrl + C במקלדת והדבק באאוטלוק");
+        fallbackExecCopy();
       }
     }
 
