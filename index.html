@@ -2,7 +2,8 @@
 <html lang="he" dir="rtl">
 <head>
   <meta charset="UTF-8">
-  <title>Shamir - מחולל מייל שחרור גרסה (צבעי Azure DevOps)</title>
+  <title>Shamir - Release Email Generator</title>
+  <link rel="icon" type="image/png" href="shamir_logo.png">
   <style>
     * { box-sizing: border-box; }
     body {
@@ -284,7 +285,6 @@
           </div>
           <input type="text" id="componentName" value="personal.shamir.com" 
                  placeholder="הקלד שם פרויקט (למשל shamir.com)..."
-                 onfocus="handleFieldFocus(this)" 
                  onclick="this.select()" 
                  oninput="renderEmail()">
         </div>
@@ -296,7 +296,6 @@
           </div>
           <input type="text" id="releaseVersion" value="2.2.0.4" 
                  placeholder="הקלד מספר גרסה (למשל 1.0.0.1)..."
-                 onfocus="handleFieldFocus(this)" 
                  onclick="this.select()" 
                  oninput="renderEmail()">
         </div>
@@ -308,7 +307,6 @@
           </div>
           <input type="text" id="envUrl" value="https://qapersonal.shamir.com/" 
                  placeholder="הקלד כתובת סביבה (למשל https://qa.shamir.com/)..."
-                 onfocus="handleFieldFocus(this)" 
                  onclick="this.select()" 
                  oninput="renderEmail()">
         </div>
@@ -699,7 +697,7 @@
       const badgeInfo = badgeMap[meta.key];
 
       if (isSolid && badgeInfo) {
-        const cdnUrl = `https://raw.githubusercontent.com/tzurbShamir/shamir-release-email-generator/main/badges/${badgeInfo.file}`;
+        const cdnUrl = `https://raw.githubusercontent.com/shamir-software/shamir-release-email-generator/main/badges/${badgeInfo.file}`;
         return `<img src="${cdnUrl}" width="${badgeInfo.w}" height="${badgeInfo.h}" alt="${meta.label}" border="0" style="display: inline-block; vertical-align: middle; width: ${badgeInfo.w}px; height: ${badgeInfo.h}px; border: 0;" onerror="this.onerror=null; this.src='badges/${badgeInfo.file}';" />`;
       }
 
